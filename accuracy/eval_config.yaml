@@ -1,0 +1,13 @@
+# accuracy/eval_config.yaml
+# ─────────────────────────────────────────────────────────────
+# Shared evaluation settings for all four model variants.
+# ─────────────────────────────────────────────────────────────
+
+num_fewshot: 5        # 5-shot is standard for MMLU, used across all tasks for consistency
+batch_size: 8         # how many questions get sent to model at once-fits comfortably on A10G/A100 for all four variants
+tasks:
+  - mmlu              # broad knowledge — 57 subjects, usually robust to quantization
+  - hellaswag         # commonsense reasoning — also relatively robust
+  - gsm8k             # grade school math — often degrades at 4-bit
+  - humaneval         # python code generation — sensitive to quantization
+  - truthfulqa_mc1    # factuality — sometimes shifts in unexpected ways
