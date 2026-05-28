@@ -6,8 +6,7 @@ from awq import AutoAWQForCausalLM
 bnb_config = BitsAndBytesConfig(
     load_in_8bit=True)
 
-#model_names = ["fp16", "int8", "gptq", "awq"]
-model_names = ["int8", "fp16"]
+model_names = ["fp16", "int8", "gptq", "awq"]
 for model_name  in model_names:
     print(f"Loading {model_name }...")
     if model_name == "fp16":
@@ -18,10 +17,10 @@ for model_name  in model_names:
         model = AutoModelForCausalLM.from_pretrained(f"./models/{model_name}", 
                                                     quantization_config=bnb_config,
                                                     device_map="auto")
-    # elif model_name == "gptq":
-    #     model = AutoGPTQForCausalLM.from_quantized(f"./models/{model_name}", device_map="auto")
-    # elif model_name == "awq":
-    #     model = AutoAWQForCausalLM.from_quantized(f"./models/{model_name}", device_map="auto")
+    elif model_name == "gptq":
+        model = AutoGPTQForCausalLM.from_quantized(f"./models/{model_name}", device_map="auto")
+    elif model_name == "awq":
+        model = AutoAWQForCausalLM.from_quantized(f"./models/{model_name}", device_map="auto")
     tokenizer = AutoTokenizer.from_pretrained(f"./models/{model_name}")
 
     prompt = "What are the benefits of quantizing large language models?"
