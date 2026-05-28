@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e   # stop immediately if any command fails
 
-pip install -r requirements.txt
+pip install -r setup/requirements.txt
 
 # auto-gptq needs separate index URL
 pip install auto-gptq --extra-index-url https://huggingface.github.io/autogptq-index/whl/cu118/
