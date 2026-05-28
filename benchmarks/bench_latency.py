@@ -19,7 +19,13 @@ PROMPT_LENGTHS = [128, 512, 1024, 2048, 4096]
 bnb_config = BitsAndBytesConfig(
     load_in_8bit=True)
 
-total_latency_results = []
+CSV_PATH = os.path.join(RESULTS_DIR, "latency_results.csv")
+def save_checkpoint(results):
+    df = pd.DataFrame(results)
+    # append if file exists, write header only on first save
+    header = not os.path.exists(CSV_PATH)
+    df.to_csv(CSV_PATH, mode='a', header=header, index=False)
+    print(f"Checkpoint saved → {CSV_PATH} ({len(results)} rows)")
 
 # ── GPU utilization sampler ───────────────────────────────────────────────────
 # Samples SM utilization % in a background thread while the GPU is working.
@@ -163,7 +169,7 @@ tokenizer = AutoTokenizer.from_pretrained(f"./models/fp16")
 warmup(model, tokenizer)
 
 latency_results = benchmark_latency(model, tokenizer, model_name="fp16")
-total_latency_results.extend(latency_results)
+save_checkpoint(latency_results)
 
 del model
 torch.cuda.empty_cache()
@@ -174,7 +180,7 @@ tokenizer = AutoTokenizer.from_pretrained(f"./models/int8")
 warmup(model, tokenizer)
 
 latency_results = benchmark_latency(model, tokenizer, model_name="int8")
-total_latency_results.extend(latency_results)
+save_checkpoint(latency_results)
 
 del model
 torch.cuda.empty_cache()
@@ -186,7 +192,7 @@ tokenizer = AutoTokenizer.from_pretrained(f"./models/gptq")
 warmup(model, tokenizer)
 
 latency_results = benchmark_latency(model, tokenizer, model_name="gptq")
-total_latency_results.extend(latency_results)
+save_checkpoint(latency_results)
 
 del model
 torch.cuda.empty_cache()
@@ -197,14 +203,10 @@ tokenizer = AutoTokenizer.from_pretrained(f"./models/awq")
 
 warmup(model, tokenizer)
 latency_results = benchmark_latency(model, tokenizer, model_name="awq")
-total_latency_results.extend(latency_results)
+save_checkpoint(latency_results)
 
 del model
 torch.cuda.empty_cache()
 
-# Save results to CSV
-df = pd.DataFrame(total_latency_results)
-csv_path = os.path.join(RESULTS_DIR, "latency_results.csv")
-df.to_csv(csv_path, index=False)
-print(f"Latency results saved to {csv_path}")
+print(f"All latency benchmarks complete. Results in {CSV_PATH}")
 

@@ -12,6 +12,14 @@ from awq import AutoAWQForCausalLM
 RESULTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
+CSV_PATH = os.path.join(RESULTS_DIR, "throughput_results.csv")
+
+def save_checkpoint(results):
+    df = pd.DataFrame(results)
+    header = not os.path.exists(CSV_PATH)
+    df.to_csv(CSV_PATH, mode='a', header=header, index=False)
+    print(f"Checkpoint saved → {CSV_PATH} ({len(results)} rows)")
+
 bnb_config = BitsAndBytesConfig(
     load_in_8bit=True)
 
@@ -78,7 +86,6 @@ def benchmark_throughput(model, tokenizer, model_name):
     
     return results
 
-throughput_results = []
 
 #---------model : fp16--------------------------------------
 model = AutoModelForCausalLM.from_pretrained(f"./models/fp16", dtype=torch.float16, device_map="auto")
@@ -87,7 +94,7 @@ tokenizer = AutoTokenizer.from_pretrained(f"./models/fp16")
 warmup(model, tokenizer)
 
 throughput_results_model   = benchmark_throughput(model, tokenizer, model_name="fp16")
-throughput_results.extend(throughput_results_model)
+save_checkpoint(throughput_results_model) 
 
 del model
 torch.cuda.empty_cache()
@@ -98,7 +105,7 @@ tokenizer = AutoTokenizer.from_pretrained(f"./models/int8")
 warmup(model, tokenizer)
 
 throughput_results_model = benchmark_throughput(model, tokenizer, model_name="int8")
-throughput_results.extend(throughput_results_model)
+save_checkpoint(throughput_results_model) 
 
 del model
 torch.cuda.empty_cache()
@@ -110,7 +117,7 @@ tokenizer = AutoTokenizer.from_pretrained(f"./models/gptq")
 warmup(model, tokenizer)
 
 throughput_results_model = benchmark_throughput(model, tokenizer, model_name="gptq")
-throughput_results.extend(throughput_results_model)
+save_checkpoint(throughput_results_model) 
 
 del model
 torch.cuda.empty_cache()
@@ -121,14 +128,10 @@ tokenizer = AutoTokenizer.from_pretrained(f"./models/awq")
 
 warmup(model, tokenizer)
 throughput_results_model = benchmark_throughput(model, tokenizer, model_name="awq")
-throughput_results.extend(throughput_results_model)
+save_checkpoint(throughput_results_model) 
 
 del model
 torch.cuda.empty_cache()
 
-# Save results to CSV
-df = pd.DataFrame(throughput_results)
-csv_path = os.path.join(RESULTS_DIR, "throughput_results.csv")
-df.to_csv(csv_path, index=False)
-print(f"Throughput results saved to {csv_path}")
+print(f"All throughput benchmarks complete. Results in {CSV_PATH}")
 
