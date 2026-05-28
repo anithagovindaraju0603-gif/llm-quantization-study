@@ -18,7 +18,7 @@ for model_name  in model_names:
                                                     quantization_config=bnb_config,
                                                     device_map="auto")
     elif model_name == "gptq":
-        model = AutoGPTQForCausalLM.from_quantized(f"./models/{model_name}")
+        model = AutoGPTQForCausalLM.from_quantized(f"./models/{model_name}", device_map="auto")
     elif model_name == "awq":
         model = AutoAWQForCausalLM.from_quantized(f"./models/{model_name}")
     tokenizer = AutoTokenizer.from_pretrained(f"./models/{model_name}")
