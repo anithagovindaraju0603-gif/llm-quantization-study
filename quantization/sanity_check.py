@@ -11,7 +11,7 @@ for model_name  in model_names:
     print(f"Loading {model_name }...")
     if model_name == "fp16":
         model = AutoModelForCausalLM.from_pretrained(f"./models/{model_name}", 
-                                                     dtype=torch.float16,
+                                                     torch_dtype=torch.float16,
                                                     device_map="auto")
     elif model_name == "int8":
         model = AutoModelForCausalLM.from_pretrained(f"./models/{model_name}", 
