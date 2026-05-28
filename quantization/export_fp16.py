@@ -10,7 +10,7 @@ if hf_token is None:
 login(token=hf_token)
 
 model = AutoModelForCausalLM.from_pretrained('meta-llama/Llama-3.1-8B-Instruct', 
-                                             dtype=torch.float16,
+                                             torch_dtype=torch.float16,
                                              device_map="auto")
 tokenizer = AutoTokenizer.from_pretrained('meta-llama/Llama-3.1-8B-Instruct')
 
