@@ -16,6 +16,7 @@ tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
 
 # load 128 samples from C4 or wikitext as calibration data
 calib = load_dataset("allenai/c4", # dataset has 3 columns : "text", "timestamp", "url"
+                     "en", # english subset
                      split="train", #gets the training split of the dataset
                      streaming=True) # streaming downloads samples one at a time as you need them
 calib_samples = [
