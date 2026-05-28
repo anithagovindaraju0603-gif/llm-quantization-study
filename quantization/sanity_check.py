@@ -17,10 +17,10 @@ for model_name  in model_names:
         model = AutoModelForCausalLM.from_pretrained(f"./models/{model_name}", 
                                                     quantization_config=bnb_config,
                                                     device_map="auto")
-    elif model_name == "gptq":
-        model = AutoGPTQForCausalLM.from_quantized(f"./models/{model_name}", device_map="auto")
-    elif model_name == "awq":
-        model = AutoAWQForCausalLM.from_quantized(f"./models/{model_name}")
+    # elif model_name == "gptq":
+    #     model = AutoGPTQForCausalLM.from_quantized(f"./models/{model_name}", device_map="auto")
+    # elif model_name == "awq":
+    #     model = AutoAWQForCausalLM.from_quantized(f"./models/{model_name}", device_map="auto")
     tokenizer = AutoTokenizer.from_pretrained(f"./models/{model_name}")
 
     prompt = "What are the benefits of quantizing large language models?"
