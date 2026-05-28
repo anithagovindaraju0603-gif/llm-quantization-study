@@ -3,7 +3,7 @@ import time
 import torch
 import pandas as pd
 import statistics
-import nvidia_ml_py as pynvml 
+import pynvml 
 import threading
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from auto_gptq import AutoGPTQForCausalLM
