@@ -1,4 +1,5 @@
 .env
 __pycache__/
 *.pyc
-.ipynb_checkpoints/
+.ipynb_checkpoints/models/
+=2.1.0
