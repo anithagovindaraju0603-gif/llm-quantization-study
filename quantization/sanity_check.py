@@ -6,7 +6,8 @@ from awq import AutoAWQForCausalLM
 bnb_config = BitsAndBytesConfig(
     load_in_8bit=True)
 
-model_names = ["fp16", "int8", "gptq", "awq"]
+#model_names = ["fp16", "int8", "gptq", "awq"]
+model_names = ["fp16", "int8"]
 for model_name  in model_names:
     print(f"Loading {model_name }...")
     if model_name == "fp16":
