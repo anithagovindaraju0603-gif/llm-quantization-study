@@ -163,7 +163,7 @@ def benchmark_latency(model, tokenizer, model_name):
 
     return latency_results
 #---------model : fp16--------------------------------------
-model = AutoModelForCausalLM.from_pretrained(f"./models/fp16", dtype=torch.float16, device_map="auto")
+model = AutoModelForCausalLM.from_pretrained(f"./models/fp16", torch_dtype=torch.float16, device_map="auto")
 tokenizer = AutoTokenizer.from_pretrained(f"./models/fp16")
 
 warmup(model, tokenizer)

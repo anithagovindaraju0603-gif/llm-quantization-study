@@ -20,7 +20,7 @@ memory_results = {}
 # Model variant fp16: 16-bit floating point precision
 #-----------------------------------------------------
 model = AutoModelForCausalLM.from_pretrained(f"./models/fp16", 
-                                             dtype=torch.float16,
+                                             torch_dtype=torch.float16,
                                              device_map="auto")
 tokenizer = AutoTokenizer.from_pretrained(f"./models/fp16")
 
