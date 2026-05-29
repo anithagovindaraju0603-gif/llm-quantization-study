@@ -14,6 +14,7 @@
 # ─────────────────────────────────────────────────────────────
 
 set -e  # stop immediately if any command fails
+export HF_ALLOW_CODE_EVAL=1
 
 # ── Auth ──────────────────────────────────────────────────────
 # Some benchmark datasets are gated on HuggingFace
@@ -31,41 +32,41 @@ BATCH=8
 # ── FP16 ──────────────────────────────────────────────────────
 # Baseline — reference point for all other variants
 echo "=========================================="
-echo "Evaluating FP16 (baseline)..."
-echo "=========================================="
-lm_eval --model hf \
-        --model_args pretrained=./models/fp16 \
-        --tasks $TASKS \
-        --num_fewshot $FEWSHOT \
-        --batch_size $BATCH \
-        --output_path $RESULTS_DIR/fp16_eval.json
-echo "FP16 eval complete."
+# # echo "Evaluating FP16 (baseline)..."
+# # echo "=========================================="
+# # lm_eval --model hf \
+# #         --confirm_run_unsafe_code --model_args pretrained=./models/fp16 \
+# #         --tasks $TASKS \
+# #         --num_fewshot $FEWSHOT \
+# #         --batch_size $BATCH \
+# #         --output_path $RESULTS_DIR/fp16_eval.json
+# # echo "FP16 eval complete."
 
 # ── INT8 ──────────────────────────────────────────────────────
 # bitsandbytes 8-bit
 echo "=========================================="
-echo "Evaluating INT8..."
-echo "=========================================="
-lm_eval --model hf \
-        --model_args pretrained=./models/int8,load_in_8bit=True \
-        --tasks $TASKS \
-        --num_fewshot $FEWSHOT \
-        --batch_size $BATCH \
-        --output_path $RESULTS_DIR/int8_eval.json
-echo "INT8 eval complete."
+# echo "Evaluating INT8..."
+# echo "=========================================="
+# lm_eval --model hf \
+#         --confirm_run_unsafe_code --model_args pretrained=./models/int8 \
+#         --tasks $TASKS \
+#         --num_fewshot $FEWSHOT \
+#         --batch_size $BATCH \
+#         --output_path $RESULTS_DIR/int8_eval.json
+# echo "INT8 eval complete."
 
 # ── GPTQ 4-bit ────────────────────────────────────────────────
 # Post-training 4-bit
 echo "=========================================="
-echo "Evaluating GPTQ 4-bit..."
-echo "=========================================="
-lm_eval --model hf \
-        --model_args pretrained=./models/gptq,autogptq=True \
-        --tasks $TASKS \
-        --num_fewshot $FEWSHOT \
-        --batch_size $BATCH \
-        --output_path $RESULTS_DIR/gptq_eval.json
-echo "GPTQ eval complete."
+# echo "Evaluating GPTQ 4-bit..."
+# echo "=========================================="
+# lm_eval --model hf \
+#         --confirm_run_unsafe_code --model_args pretrained=./models/gptq \
+#         --tasks $TASKS \
+#         --num_fewshot $FEWSHOT \
+#         --batch_size $BATCH \
+#         --output_path $RESULTS_DIR/gptq_eval.json
+# echo "GPTQ eval complete."
 
 # ── AWQ 4-bit ─────────────────────────────────────────────────
 # Activation-aware 4-bit
@@ -73,7 +74,7 @@ echo "=========================================="
 echo "Evaluating AWQ 4-bit..."
 echo "=========================================="
 lm_eval --model hf \
-        --model_args pretrained=./models/awq,autoawq=True \
+        --confirm_run_unsafe_code --model_args pretrained=./models/awq,dtype=float16 \
         --tasks $TASKS \
         --num_fewshot $FEWSHOT \
         --batch_size $BATCH \
